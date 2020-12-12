@@ -14,6 +14,24 @@
  * =========================================================
  */
 
+public void btnAbrirPuerto_click(GButton source, GEvent event) { //_CODE_:btnAbrirPuerto:356009:
+  println("btnAbrirPuerto - GButton >> GEvent." + event + " @ " + millis());
+  conectar();
+} //_CODE_:btnAbrirPuerto:356009:
+
+public void btnDesconectar_click(GButton source, GEvent event) { //_CODE_:btnDesconectar:881514:
+  desconectar();
+  println("btnDesconectar - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:btnDesconectar:881514:
+
+public void btnIniciar_click(GButton source, GEvent event) { //_CODE_:btnIniciar:459039:
+  println("btnIniciar - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:btnIniciar:459039:
+
+public void btnDetener_click(GButton source, GEvent event) { //_CODE_:btnDetener:787334:
+  println("btnDetener - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:btnDetener:787334:
+
 
 
 // Create all the GUI controls. 
@@ -23,27 +41,99 @@ public void createGUI(){
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
   G4P.setMouseOverEnabled(false);
   surface.setTitle("Programa");
-  lbl_id = new GLabel(this, 20, 20, 50, 20);
+  lbl_id = new GLabel(this, 20, 50, 50, 20);
   lbl_id.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lbl_id.setText("ID");
   lbl_id.setOpaque(false);
-  lbl_fecha = new GLabel(this, 20, 50, 50, 20);
+  lbl_fecha = new GLabel(this, 20, 80, 50, 20);
   lbl_fecha.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lbl_fecha.setText("Fecha");
   lbl_fecha.setOpaque(false);
-  lblFechaActual = new GLabel(this, 80, 50, 80, 20);
+  lblFechaActual = new GLabel(this, 70, 80, 170, 20);
   lblFechaActual.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lblFechaActual.setOpaque(false);
-  chkAleatorio = new GCheckbox(this, 20, 80, 120, 20);
+  chkAleatorio = new GCheckbox(this, 20, 110, 120, 20);
   chkAleatorio.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
   chkAleatorio.setText("Aleatorio");
   chkAleatorio.setOpaque(false);
-  lblNotas = new GLabel(this, 170, 20, 80, 20);
+  chkAleatorio.setSelected(true);
+  lblNotas = new GLabel(this, 180, 50, 80, 20);
   lblNotas.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lblNotas.setText("Notas");
   lblNotas.setOpaque(false);
-  txaNotas = new GTextArea(this, 250, 20, 330, 80, G4P.SCROLLBARS_VERTICAL_ONLY | G4P.SCROLLBARS_AUTOHIDE);
+  txaNotas = new GTextArea(this, 260, 50, 330, 110, G4P.SCROLLBARS_VERTICAL_ONLY | G4P.SCROLLBARS_AUTOHIDE);
   txaNotas.setOpaque(false);
+  lblComenzarCon = new GLabel(this, 20, 140, 100, 20);
+  lblComenzarCon.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lblComenzarCon.setText("Comenzar con:");
+  lblComenzarCon.setOpaque(false);
+  lstEstimulo = new GDropList(this, 120, 140, 90, 60, 2, 10);
+  lstEstimulo.setItems(loadStrings("list_358796"), 0);
+  lblPuerto = new GLabel(this, 20, 20, 80, 20);
+  lblPuerto.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lblPuerto.setText("Puerto:");
+  lblPuerto.setOpaque(false);
+  lstPuertos = new GDropList(this, 100, 20, 140, 80, 3, 10);
+  lstPuertos.setItems(Arduino.list(), 0);
+  btnAbrirPuerto = new GButton(this, 250, 20, 110, 20);
+  btnAbrirPuerto.setText("Abrir puerto");
+  btnAbrirPuerto.addEventHandler(this, "btnAbrirPuerto_click");
+  btnDesconectar = new GButton(this, 250, 20, 100, 20);
+  btnDesconectar.setText("Desconectar...");
+  btnDesconectar.setLocalColorScheme(GCScheme.RED_SCHEME);
+  btnDesconectar.addEventHandler(this, "btnDesconectar_click");
+  fldID = new GTextField(this, 70, 50, 100, 20, G4P.SCROLLBARS_NONE);
+  fldID.setOpaque(true);
+  lblEnsayosLuz = new GLabel(this, 20, 170, 100, 20);
+  lblEnsayosLuz.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lblEnsayosLuz.setText("# Ensayos luz");
+  lblEnsayosLuz.setOpaque(false);
+  fldEnsayosLuz = new GTextField(this, 120, 170, 40, 20, G4P.SCROLLBARS_NONE);
+  fldEnsayosLuz.setOpaque(true);
+  lblEnsayosTono = new GLabel(this, 220, 170, 110, 20);
+  lblEnsayosTono.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lblEnsayosTono.setText("# Ensayos tono:");
+  lblEnsayosTono.setOpaque(false);
+  fldEnsayosTono = new GTextField(this, 330, 170, 40, 20, G4P.SCROLLBARS_NONE);
+  fldEnsayosTono.setOpaque(true);
+  lblTiempoEspera = new GLabel(this, 20, 200, 150, 20);
+  lblTiempoEspera.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lblTiempoEspera.setText("Tiempo de espera (ms)");
+  lblTiempoEspera.setOpaque(false);
+  fldTiempoEspera = new GTextField(this, 170, 200, 40, 20, G4P.SCROLLBARS_NONE);
+  fldTiempoEspera.setOpaque(true);
+  lblDuracionEstimulo = new GLabel(this, 270, 200, 180, 20);
+  lblDuracionEstimulo.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lblDuracionEstimulo.setText("Duración del estímulo (ms):");
+  lblDuracionEstimulo.setOpaque(false);
+  fldDuracionEstimulo = new GTextField(this, 450, 200, 40, 20, G4P.SCROLLBARS_NONE);
+  fldDuracionEstimulo.setOpaque(true);
+  lblRetardoPuerta = new GLabel(this, 20, 230, 170, 20);
+  lblRetardoPuerta.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lblRetardoPuerta.setText("Retardo puerta (ms):");
+  lblRetardoPuerta.setOpaque(false);
+  fldRetardoPuerta = new GTextField(this, 190, 230, 40, 20, G4P.SCROLLBARS_NONE);
+  fldRetardoPuerta.setOpaque(true);
+  lblVolumenIzquierdo = new GLabel(this, 20, 260, 190, 20);
+  lblVolumenIzquierdo.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lblVolumenIzquierdo.setText("Volumen de recompenza izq.");
+  lblVolumenIzquierdo.setOpaque(false);
+  fldVolumenIzquierdo = new GTextField(this, 210, 260, 40, 20, G4P.SCROLLBARS_NONE);
+  fldVolumenIzquierdo.setOpaque(true);
+  lblVolumenDerecha = new GLabel(this, 270, 260, 190, 20);
+  lblVolumenDerecha.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lblVolumenDerecha.setText("Volumen de recompenza der.");
+  lblVolumenDerecha.setOpaque(false);
+  fldVolumenDerecho = new GTextField(this, 460, 260, 40, 20, G4P.SCROLLBARS_NONE);
+  fldVolumenDerecho.setOpaque(true);
+  btnIniciar = new GButton(this, 110, 310, 80, 30);
+  btnIniciar.setText("Iniciar");
+  btnIniciar.setLocalColorScheme(GCScheme.GREEN_SCHEME);
+  btnIniciar.addEventHandler(this, "btnIniciar_click");
+  btnDetener = new GButton(this, 380, 310, 80, 30);
+  btnDetener.setText("Detener");
+  btnDetener.setLocalColorScheme(GCScheme.RED_SCHEME);
+  btnDetener.addEventHandler(this, "btnDetener_click");
 }
 
 // Variable declarations 
@@ -54,3 +144,26 @@ GLabel lblFechaActual;
 GCheckbox chkAleatorio; 
 GLabel lblNotas; 
 GTextArea txaNotas; 
+GLabel lblComenzarCon; 
+GDropList lstEstimulo; 
+GLabel lblPuerto; 
+GDropList lstPuertos; 
+GButton btnAbrirPuerto; 
+GButton btnDesconectar; 
+GTextField fldID; 
+GLabel lblEnsayosLuz; 
+GTextField fldEnsayosLuz; 
+GLabel lblEnsayosTono; 
+GTextField fldEnsayosTono; 
+GLabel lblTiempoEspera; 
+GTextField fldTiempoEspera; 
+GLabel lblDuracionEstimulo; 
+GTextField fldDuracionEstimulo; 
+GLabel lblRetardoPuerta; 
+GTextField fldRetardoPuerta; 
+GLabel lblVolumenIzquierdo; 
+GTextField fldVolumenIzquierdo; 
+GLabel lblVolumenDerecha; 
+GTextField fldVolumenDerecho; 
+GButton btnIniciar; 
+GButton btnDetener; 
