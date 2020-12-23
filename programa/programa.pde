@@ -7,12 +7,24 @@ import g4p_controls.*;
 String fecha;
 String hora;
 String id;
-Arduino duino;
+Arduino ardu;
 
 
 //conexiones
-int OUT1=5;
-int OUT2=6;
+int ledBuzser=2;
+int ledLuz=4;
+int motorI=5;
+int motorD=6;
+int puerta=7;
+int sensorI=17;
+int sensorD=16;
+int sensorE=15;
+
+//variables
+int angCierre = 45;
+int angAbierto= 100;
+int pulsoBomba = 7;
+
 
 
 public void setup(){
@@ -35,5 +47,9 @@ public void draw(){
 
 public void customGUI(){
   btnDesconectar.setVisible(false);
+  fldVolumenIzquierdo.setNumericType(G4P.DECIMAL);
+  fldVolumenDerecho.setNumericType(G4P.DECIMAL);
+  fldEnsayosLuz.setNumericType(G4P.INTEGER);
+  fldEnsayosLuz.setNumericType(G4P.INTEGER);
 
 }
