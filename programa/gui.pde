@@ -32,6 +32,14 @@ public void btnDetener_click(GButton source, GEvent event) { //_CODE_:btnDetener
   println("btnDetener - GButton >> GEvent." + event + " @ " + millis());
 } //_CODE_:btnDetener:787334:
 
+public void btnAbrir_click(GButton source, GEvent event) { //_CODE_:btnAbrir:787213:
+  println("btnAbrir - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:btnAbrir:787213:
+
+public void btnCerrar_click(GButton source, GEvent event) { //_CODE_:btnCerrar:585420:
+  println("btnCerrar - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:btnCerrar:585420:
+
 
 
 // Create all the GUI controls. 
@@ -74,7 +82,7 @@ public void createGUI(){
   lblPuerto.setText("Puerto:");
   lblPuerto.setOpaque(false);
   lstPuertos = new GDropList(this, 100, 20, 140, 80, 3, 10);
-  lstPuertos.setItems(ardu.list(), 0);
+  lstPuertos.setItems(loadStrings("list_935015"), 0);
   btnAbrirPuerto = new GButton(this, 250, 20, 110, 20);
   btnAbrirPuerto.setText("Abrir puerto");
   btnAbrirPuerto.addEventHandler(this, "btnAbrirPuerto_click");
@@ -130,7 +138,7 @@ public void createGUI(){
   btnIniciar.setText("Iniciar");
   btnIniciar.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   btnIniciar.addEventHandler(this, "btnIniciar_click");
-  btnDetener = new GButton(this, 260, 350, 80, 30);
+  btnDetener = new GButton(this, 130, 337, 80, 30);
   btnDetener.setText("Detener");
   btnDetener.setLocalColorScheme(GCScheme.RED_SCHEME);
   btnDetener.addEventHandler(this, "btnDetener_click");
@@ -138,6 +146,12 @@ public void createGUI(){
   lblEstadoConexion.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lblEstadoConexion.setText("desconectado");
   lblEstadoConexion.setOpaque(false);
+  btnAbrir = new GButton(this, 320, 340, 80, 30);
+  btnAbrir.setText("Abrir");
+  btnAbrir.addEventHandler(this, "btnAbrir_click");
+  btnCerrar = new GButton(this, 430, 340, 80, 30);
+  btnCerrar.setText("Cerrar");
+  btnCerrar.addEventHandler(this, "btnCerrar_click");
 }
 
 // Variable declarations 
@@ -172,3 +186,5 @@ GTextField fldVolumenDerecho;
 GButton btnIniciar; 
 GButton btnDetener; 
 GLabel lblEstadoConexion; 
+GButton btnAbrir; 
+GButton btnCerrar; 

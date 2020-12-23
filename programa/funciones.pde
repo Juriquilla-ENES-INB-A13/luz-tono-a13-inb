@@ -15,12 +15,6 @@ void actualizarFechaHora(){
   lblFechaActual.setText(fecha + "_" + hora);
   }
 }
-void alimentar(int puerto, int volumen){
-  int temp
-}
-
-void llenar(int puerto){
-}
 
 //common functions
 
@@ -30,15 +24,17 @@ void conectar(){
     println("INFO:arduino conectado");
   }
   println("INFO:conectando al puerto:"+Serial.list()[lst_port.getSelectedIndex()]);
-  duino = new Arduino(this, Arduino.list()[lst_port.getSelectedIndex()], 57600);
-  ardu.pinMode(vibr, Arduino.OUTPUT);
-  ardu.pinMode(pump, Arduino.OUTPUT);
-  ardu.pinMode(pokeL, Arduino.INPUT);
-  ardu.pinMode(pokeR, Arduino.INPUT);
-  ardu.pinMode(door, Arduino.SERVO);
-  ardu.pinMode(inSensor, Arduino.INPUT);
-  ardu.pinMode(10,Arduino.OUTPUT);
-  ardu.servoWrite(door,closeAngle);
+  ardu = new Arduino(this, Arduino.list()[lst_port.getSelectedIndex()], 57600);
+  ardu.pinMode(motorI, Arduino.OUTPUT);
+  ardu.pinMode(motorD, Arduino.OUTPUT);
+  ardu.pinMode(ledBuzzer, Arduino.OUTPUT);
+  ardu.pinMode(ledLuz, Arduino.OUTPUT);
+  ardu.pinMode(puerta, Arduino.SERVO);
+  ardu.pinMode(sensorI, Arduino.INPUT);
+  ardu.pinMode(sensorD, Arduino.INPUT);
+  ardu.pinMode(sensorE, Arduino.INPUT);
+  ardu.servoWrite(puerta, angCierre);
+  
   //This make arduino signal an ok connection
   delay(1000);
   ardu.digitalWrite(10,Arduino.HIGH);
@@ -60,7 +56,7 @@ void desconectar(){
 void agregarTextoArchivo(String filename, String text) {
   File f = new File(dataPath(filename));
   if (!f.exists()) {
-    createFile(f);
+    creaArchivo(f);
   }
   try {
     PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
@@ -75,7 +71,7 @@ void agregarTextoArchivo(String filename, String text) {
 void creaArchivo(File f) {
   File parentDir = f.getParentFile();
   try {
-    parentDir.mkdirs(); 
+    parentDir.mkdirs();
     f.createNewFile();
   }
   catch(Exception e) {
@@ -99,14 +95,14 @@ void alimentar(int puerto,int volumen)
   int cycles=4;
   while(cycles>=0){
     ardu.digitalWrite(pump, Arduino.HIGH);
-    delay(timeFeed);
+    delay(pulsoBomba);
     ardu.digitalWrite(pump, Arduino.LOW);
-    delay(10);
+    delay(pulsoApBomba);
     cycles--;
   }
 }
 
-void openDataFolder() {
+void abrirCarpeta() {
   println("Opening folder:"+dataPath(""));
   if (System.getProperty("os.name").toLowerCase().contains("windows")) {
     launch("explorer.exe"+" "+dataPath(""));
@@ -115,7 +111,7 @@ void openDataFolder() {
   }
 }
 
-void writeParamsToFile(String flname)
+void escribirParametros(String flname)
 {
   println("FILE:"+flname);
   String datetime = new String(day()+"-"+month()+"-"+year()+" "+hour()+":"+minute()+":"+second());
@@ -126,17 +122,17 @@ void writeParamsToFile(String flname)
   appendTextToFile(flname, params);
 }
 
-void writeTableHeader(String flname)
+void escribirCabecera(String flname)
 {
   appendTextToFile(flname, "repeat,ellapsed_time,pokeL,pokeR");
 }
 
-void writeSeparator(String flname)
+void escribirSeparador(String flname)
 {
   appendTextToFile(flname, "");
 }
 
-void closeDoor(){
+void abrirPuerta(){
   ardu.pinMode(door,Arduino.SERVO);
   for(int i = openAngle;i>closeAngle;i--){
     ardu.servoWrite(door,i);
@@ -144,7 +140,7 @@ void closeDoor(){
   }
 }
 
-void openDoor(){
+void cerrarPuerta(){
   ardu.servoWrite(door,openAngle);
 }
 

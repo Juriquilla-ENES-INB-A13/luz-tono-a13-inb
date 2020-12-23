@@ -11,19 +11,22 @@ Arduino ardu;
 
 
 //conexiones
-int ledBuzser=2;
-int ledLuz=4;
+int buzzer=2;
+int led=4;
+int ledBuzzer=7;
+int ledLuz=8;
 int motorI=5;
 int motorD=6;
 int puerta=7;
-int sensorI=17;
-int sensorD=16;
-int sensorE=15;
+int sensorI=3;
+int sensorD=4;
+int sensorE=5;
 
 //variables
 int angCierre = 45;
 int angAbierto= 100;
 int pulsoBomba = 7;
+int pulsoApBomba=25;
 
 
 
