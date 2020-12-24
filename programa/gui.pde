@@ -15,13 +15,13 @@
  */
 
 public void btnAbrirPuerto_click(GButton source, GEvent event) { //_CODE_:btnAbrirPuerto:356009:
-  println("btnAbrirPuerto - GButton >> GEvent." + event + " @ " + millis());
+  
   conectar();
 } //_CODE_:btnAbrirPuerto:356009:
 
 public void btnDesconectar_click(GButton source, GEvent event) { //_CODE_:btnDesconectar:881514:
   desconectar();
-  println("btnDesconectar - GButton >> GEvent." + event + " @ " + millis());
+  
 } //_CODE_:btnDesconectar:881514:
 
 public void btnIniciar_click(GButton source, GEvent event) { //_CODE_:btnIniciar:459039:
@@ -33,12 +33,24 @@ public void btnDetener_click(GButton source, GEvent event) { //_CODE_:btnDetener
 } //_CODE_:btnDetener:787334:
 
 public void btnAbrir_click(GButton source, GEvent event) { //_CODE_:btnAbrir:787213:
-  println("btnAbrir - GButton >> GEvent." + event + " @ " + millis());
+  thread("abrirPuerta");
 } //_CODE_:btnAbrir:787213:
 
 public void btnCerrar_click(GButton source, GEvent event) { //_CODE_:btnCerrar:585420:
-  println("btnCerrar - GButton >> GEvent." + event + " @ " + millis());
+  thread("cerrarPuerta");
 } //_CODE_:btnCerrar:585420:
+
+public void btnLlenarI_click(GButton source, GEvent event) { //_CODE_:btnLlenarI:511128:
+  thread("llenarI");
+} //_CODE_:btnLlenarI:511128:
+
+public void btnLlenarD_click(GButton source, GEvent event) { //_CODE_:btnLlenarD:239189:
+  thread("llenarD");
+} //_CODE_:btnLlenarD:239189:
+
+public void btnAbrircarpeta_click(GButton source, GEvent event) { //_CODE_:btnAbrircarpeta:796587:
+  println("btnAbrircarpeta - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:btnAbrircarpeta:796587:
 
 
 
@@ -60,11 +72,6 @@ public void createGUI(){
   lblFechaActual = new GLabel(this, 70, 80, 170, 20);
   lblFechaActual.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lblFechaActual.setOpaque(false);
-  chkAleatorio = new GCheckbox(this, 20, 110, 120, 20);
-  chkAleatorio.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
-  chkAleatorio.setText("Aleatorio");
-  chkAleatorio.setOpaque(false);
-  chkAleatorio.setSelected(true);
   lblNotas = new GLabel(this, 180, 50, 80, 20);
   lblNotas.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lblNotas.setText("Notas");
@@ -134,11 +141,11 @@ public void createGUI(){
   lblVolumenDerecha.setOpaque(false);
   fldVolumenDerecho = new GTextField(this, 460, 290, 40, 20, G4P.SCROLLBARS_NONE);
   fldVolumenDerecho.setOpaque(true);
-  btnIniciar = new GButton(this, 40, 340, 80, 30);
+  btnIniciar = new GButton(this, 10, 360, 60, 30);
   btnIniciar.setText("Iniciar");
   btnIniciar.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   btnIniciar.addEventHandler(this, "btnIniciar_click");
-  btnDetener = new GButton(this, 130, 337, 80, 30);
+  btnDetener = new GButton(this, 10, 360, 60, 30);
   btnDetener.setText("Detener");
   btnDetener.setLocalColorScheme(GCScheme.RED_SCHEME);
   btnDetener.addEventHandler(this, "btnDetener_click");
@@ -146,12 +153,33 @@ public void createGUI(){
   lblEstadoConexion.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lblEstadoConexion.setText("desconectado");
   lblEstadoConexion.setOpaque(false);
-  btnAbrir = new GButton(this, 320, 340, 80, 30);
+  btnAbrir = new GButton(this, 490, 360, 80, 30);
   btnAbrir.setText("Abrir");
+  btnAbrir.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
   btnAbrir.addEventHandler(this, "btnAbrir_click");
-  btnCerrar = new GButton(this, 430, 340, 80, 30);
+  btnCerrar = new GButton(this, 590, 360, 80, 30);
   btnCerrar.setText("Cerrar");
+  btnCerrar.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
   btnCerrar.addEventHandler(this, "btnCerrar_click");
+  btnLlenarI = new GButton(this, 110, 360, 80, 30);
+  btnLlenarI.setText("Llenar Izq.");
+  btnLlenarI.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  btnLlenarI.addEventHandler(this, "btnLlenarI_click");
+  btnLlenarD = new GButton(this, 190, 360, 80, 30);
+  btnLlenarD.setText("Llenar Der.");
+  btnLlenarD.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  btnLlenarD.addEventHandler(this, "btnLlenarD_click");
+  lblPuerta = new GLabel(this, 540, 330, 80, 20);
+  lblPuerta.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lblPuerta.setText("Puerta:");
+  lblPuerta.setOpaque(false);
+  lblBombas = new GLabel(this, 150, 330, 80, 20);
+  lblBombas.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lblBombas.setText("Bombas");
+  lblBombas.setOpaque(false);
+  btnAbrircarpeta = new GButton(this, 330, 360, 110, 30);
+  btnAbrircarpeta.setText("Abrir carpeta");
+  btnAbrircarpeta.addEventHandler(this, "btnAbrircarpeta_click");
 }
 
 // Variable declarations 
@@ -159,7 +187,6 @@ public void createGUI(){
 GLabel lbl_id; 
 GLabel lbl_fecha; 
 GLabel lblFechaActual; 
-GCheckbox chkAleatorio; 
 GLabel lblNotas; 
 GTextArea txaNotas; 
 GLabel lblComenzarCon; 
@@ -188,3 +215,8 @@ GButton btnDetener;
 GLabel lblEstadoConexion; 
 GButton btnAbrir; 
 GButton btnCerrar; 
+GButton btnLlenarI; 
+GButton btnLlenarD; 
+GLabel lblPuerta; 
+GLabel lblBombas; 
+GButton btnAbrircarpeta; 

@@ -1,3 +1,5 @@
+//Funciones básicas
+
 void fecha(){
   while(true){
   fecha = day()+"-"+month()+"-"+year();
@@ -16,17 +18,15 @@ void actualizarFechaHora(){
   }
 }
 
-//common functions
-
 void conectar(){
   if(ardu != null){
     ardu.dispose();
     println("INFO:arduino conectado");
   }
-  println("INFO:conectando al puerto:"+Serial.list()[lst_port.getSelectedIndex()]);
-  ardu = new Arduino(this, Arduino.list()[lst_port.getSelectedIndex()], 57600);
-  ardu.pinMode(motorI, Arduino.OUTPUT);
-  ardu.pinMode(motorD, Arduino.OUTPUT);
+  println("INFO:conectando al puerto:"+Serial.list()[lstPuertos.getSelectedIndex()]);
+  ardu = new Arduino(this, Arduino.list()[lstPuertos.getSelectedIndex()], 57600);
+  ardu.pinMode(bombaI, Arduino.OUTPUT);
+  ardu.pinMode(bombaD, Arduino.OUTPUT);
   ardu.pinMode(ledBuzzer, Arduino.OUTPUT);
   ardu.pinMode(ledLuz, Arduino.OUTPUT);
   ardu.pinMode(puerta, Arduino.SERVO);
@@ -94,14 +94,23 @@ void alimentar(int puerto,int volumen)
   println("RUN: feed");
   int cycles=4;
   while(cycles>=0){
-    ardu.digitalWrite(pump, Arduino.HIGH);
+    ardu.digitalWrite(puerto, Arduino.HIGH);
     delay(pulsoBomba);
-    ardu.digitalWrite(pump, Arduino.LOW);
+    ardu.digitalWrite(puerto, Arduino.LOW);
     delay(pulsoApBomba);
     cycles--;
   }
 }
 
+void llenarI(){
+  llenar(bombaI);
+}
+
+void llenarD(){
+  llenar(bombaD);
+}
+
+//funciones archivo
 void abrirCarpeta() {
   println("Opening folder:"+dataPath(""));
   if (System.getProperty("os.name").toLowerCase().contains("windows")) {
@@ -116,34 +125,39 @@ void escribirParametros(String flname)
   println("FILE:"+flname);
   String datetime = new String(day()+"-"+month()+"-"+year()+" "+hour()+":"+minute()+":"+second());
   println(datetime);
-  String params = new String("freq:" + fld_freq.getValueI()+" time:"+fld_vibr_duration.getValueF()+" response_time:"+fld_response_time.getValueF()+" repeats:"+fld_repeats.getValueI()+" exp_time:"+fld_time_experiments.getValueF());
+  String params = new String();
   println(params);
-  appendTextToFile(flname, "started: "+datetime);
-  appendTextToFile(flname, params);
+  agregarTextoArchivo(flname, "started: "+datetime);
+  agregarTextoArchivo(flname, params);
 }
 
 void escribirCabecera(String flname)
 {
-  appendTextToFile(flname, "repeat,ellapsed_time,pokeL,pokeR");
+  agregarTextoArchivo(flname, "");
 }
 
 void escribirSeparador(String flname)
 {
-  appendTextToFile(flname, "");
+  agregarTextoArchivo(flname, "");
 }
 
 void abrirPuerta(){
-  ardu.pinMode(door,Arduino.SERVO);
-  for(int i = openAngle;i>closeAngle;i--){
-    ardu.servoWrite(door,i);
-    delay(doorDelay);
+  ardu.pinMode(puerta,Arduino.SERVO);
+  for(int i = angAbierto;i<angCierre;i++){
+    ardu.servoWrite(puerta,i);
+    delay(esperaPuerta);
   }
 }
 
 void cerrarPuerta(){
-  ardu.servoWrite(door,openAngle);
+  
+  for(int i = angCierre;i>angAbierto;i--)
+  {
+    ardu.servoWrite(puerta,i;
+    delay(esperaPuerta);
+  }
 }
 
-void addWindowInfo(){
-  surface.setTitle("Stage 1 "+day()+"-"+month()+"-"+year()+" "+hour()+":"+minute()+":"+second()+ "  Iteration:"+numIteration+ " OK:"+numOk+" Fail:"+numFail);
+void infoVentana(){
+  surface.setTitle("");
 }
