@@ -92,7 +92,7 @@ void llenar(int puerto)
 void alimentar(int puerto,int volumen)
 {
   println("RUN: feed");
-  int cycles=4;
+  int cycles = volumen*4;
   while(cycles>=0){
     ardu.digitalWrite(puerto, Arduino.HIGH);
     delay(pulsoBomba);
@@ -125,10 +125,10 @@ void escribirParametros(String flname)
   println("FILE:"+flname);
   String datetime = new String(day()+"-"+month()+"-"+year()+" "+hour()+":"+minute()+":"+second());
   println(datetime);
-  String params = new String();
-  println(params);
+  //String params = fld;
+  //println(params);
   agregarTextoArchivo(flname, "started: "+datetime);
-  agregarTextoArchivo(flname, params);
+  //agregarTextoArchivo(flname, params);
 }
 
 void escribirCabecera(String flname)
@@ -153,7 +153,7 @@ void cerrarPuerta(){
   
   for(int i = angCierre;i>angAbierto;i--)
   {
-    ardu.servoWrite(puerta,i;
+    ardu.servoWrite(puerta,i);
     delay(esperaPuerta);
   }
 }

@@ -25,11 +25,12 @@ public void btnDesconectar_click(GButton source, GEvent event) { //_CODE_:btnDes
 } //_CODE_:btnDesconectar:881514:
 
 public void btnIniciar_click(GButton source, GEvent event) { //_CODE_:btnIniciar:459039:
-  println("btnIniciar - GButton >> GEvent." + event + " @ " + millis());
+  experimentoCorriendo=true;
+  thread("experimento");
 } //_CODE_:btnIniciar:459039:
 
 public void btnDetener_click(GButton source, GEvent event) { //_CODE_:btnDetener:787334:
-  println("btnDetener - GButton >> GEvent." + event + " @ " + millis());
+  experimentoCorriendo=false;
 } //_CODE_:btnDetener:787334:
 
 public void btnAbrir_click(GButton source, GEvent event) { //_CODE_:btnAbrir:787213:
@@ -49,7 +50,7 @@ public void btnLlenarD_click(GButton source, GEvent event) { //_CODE_:btnLlenarD
 } //_CODE_:btnLlenarD:239189:
 
 public void btnAbrircarpeta_click(GButton source, GEvent event) { //_CODE_:btnAbrircarpeta:796587:
-  println("btnAbrircarpeta - GButton >> GEvent." + event + " @ " + millis());
+  thread("abrirCarpeta");
 } //_CODE_:btnAbrircarpeta:796587:
 
 
@@ -83,13 +84,13 @@ public void createGUI(){
   lblComenzarCon.setText("Comenzar con:");
   lblComenzarCon.setOpaque(false);
   lstEstimulo = new GDropList(this, 120, 140, 90, 60, 2, 10);
-  lstEstimulo.setItems(loadStrings("list_358796"), 0);
+  lstEstimulo.setItems(arrIniciar, 0);
   lblPuerto = new GLabel(this, 20, 20, 80, 20);
   lblPuerto.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lblPuerto.setText("Puerto:");
   lblPuerto.setOpaque(false);
   lstPuertos = new GDropList(this, 100, 20, 140, 80, 3, 10);
-  lstPuertos.setItems(loadStrings("list_935015"), 0);
+  lstPuertos.setItems(Arduino.list(), 0);
   btnAbrirPuerto = new GButton(this, 250, 20, 110, 20);
   btnAbrirPuerto.setText("Abrir puerto");
   btnAbrirPuerto.addEventHandler(this, "btnAbrirPuerto_click");
@@ -180,6 +181,9 @@ public void createGUI(){
   btnAbrircarpeta = new GButton(this, 330, 360, 110, 30);
   btnAbrircarpeta.setText("Abrir carpeta");
   btnAbrircarpeta.addEventHandler(this, "btnAbrircarpeta_click");
+  lblEstado = new GLabel(this, 310, 320, 150, 20);
+  lblEstado.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lblEstado.setOpaque(false);
 }
 
 // Variable declarations 
@@ -220,3 +224,4 @@ GButton btnLlenarD;
 GLabel lblPuerta; 
 GLabel lblBombas; 
 GButton btnAbrircarpeta; 
+GLabel lblEstado; 
