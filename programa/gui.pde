@@ -15,43 +15,46 @@
  */
 
 public void btnAbrirPuerto_click(GButton source, GEvent event) { //_CODE_:btnAbrirPuerto:356009:
-  
+  println("btnAbrirPuerto - GButton >> GEvent." + event + " @ " + millis());
   conectar();
 } //_CODE_:btnAbrirPuerto:356009:
 
 public void btnDesconectar_click(GButton source, GEvent event) { //_CODE_:btnDesconectar:881514:
   desconectar();
-  
+  println("btnDesconectar - GButton >> GEvent." + event + " @ " + millis());
 } //_CODE_:btnDesconectar:881514:
 
 public void btnIniciar_click(GButton source, GEvent event) { //_CODE_:btnIniciar:459039:
-  experimentoCorriendo=true;
+  println("btnIniciar - GButton >> GEvent." + event + " @ " + millis());
   thread("experimento");
 } //_CODE_:btnIniciar:459039:
 
 public void btnDetener_click(GButton source, GEvent event) { //_CODE_:btnDetener:787334:
+  println("btnDetener - GButton >> GEvent." + event + " @ " + millis());
+  esperandoPrueba=false;
+  cancelado=true;
   experimentoCorriendo=false;
 } //_CODE_:btnDetener:787334:
 
-public void btnAbrir_click(GButton source, GEvent event) { //_CODE_:btnAbrir:787213:
-  thread("abrirPuerta");
-} //_CODE_:btnAbrir:787213:
+public void btnBombaI_click(GButton source, GEvent event) { //_CODE_:btnBombaI:932245:
+  println("btnBombaI - GButton >> GEvent." + event + " @ " + millis());
+  llenar(bombaI);
+} //_CODE_:btnBombaI:932245:
 
-public void btnCerrar_click(GButton source, GEvent event) { //_CODE_:btnCerrar:585420:
-  thread("cerrarPuerta");
-} //_CODE_:btnCerrar:585420:
+public void btnBombaD_click(GButton source, GEvent event) { //_CODE_:btnBombaD:772033:
+  println("btnBombaD - GButton >> GEvent." + event + " @ " + millis());
+  llenar(bombaD);
+} //_CODE_:btnBombaD:772033:
 
-public void btnLlenarI_click(GButton source, GEvent event) { //_CODE_:btnLlenarI:511128:
-  thread("llenarI");
-} //_CODE_:btnLlenarI:511128:
+public void btnAbrir_click(GButton source, GEvent event) { //_CODE_:btnAbrir:762948:
+  println("btnAbrir - GButton >> GEvent." + event + " @ " + millis());
+  abrirPuerta();
+} //_CODE_:btnAbrir:762948:
 
-public void btnLlenarD_click(GButton source, GEvent event) { //_CODE_:btnLlenarD:239189:
-  thread("llenarD");
-} //_CODE_:btnLlenarD:239189:
-
-public void btnAbrircarpeta_click(GButton source, GEvent event) { //_CODE_:btnAbrircarpeta:796587:
-  thread("abrirCarpeta");
-} //_CODE_:btnAbrircarpeta:796587:
+public void btnCerrar_click(GButton source, GEvent event) { //_CODE_:btnCerrar:516552:
+  println("btnCerrar - GButton >> GEvent." + event + " @ " + millis());
+  cerrarPuerta();
+} //_CODE_:btnCerrar:516552:
 
 
 
@@ -73,6 +76,11 @@ public void createGUI(){
   lblFechaActual = new GLabel(this, 70, 80, 170, 20);
   lblFechaActual.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lblFechaActual.setOpaque(false);
+  chkAleatorio = new GCheckbox(this, 20, 110, 120, 20);
+  chkAleatorio.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
+  chkAleatorio.setText("Aleatorio");
+  chkAleatorio.setOpaque(false);
+  chkAleatorio.setSelected(true);
   lblNotas = new GLabel(this, 180, 50, 80, 20);
   lblNotas.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lblNotas.setText("Notas");
@@ -84,7 +92,7 @@ public void createGUI(){
   lblComenzarCon.setText("Comenzar con:");
   lblComenzarCon.setOpaque(false);
   lstEstimulo = new GDropList(this, 120, 140, 90, 60, 2, 10);
-  lstEstimulo.setItems(arrIniciar, 0);
+  lstEstimulo.setItems(pruebas, 0);
   lblPuerto = new GLabel(this, 20, 20, 80, 20);
   lblPuerto.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lblPuerto.setText("Puerto:");
@@ -100,88 +108,73 @@ public void createGUI(){
   btnDesconectar.addEventHandler(this, "btnDesconectar_click");
   fldID = new GTextField(this, 70, 50, 100, 20, G4P.SCROLLBARS_NONE);
   fldID.setOpaque(true);
-  lblEnsayosLuz = new GLabel(this, 100, 210, 100, 20);
+  lblEnsayosLuz = new GLabel(this, 20, 170, 100, 20);
   lblEnsayosLuz.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lblEnsayosLuz.setText("# Ensayos luz");
   lblEnsayosLuz.setOpaque(false);
-  fldEnsayosLuz = new GTextField(this, 200, 210, 40, 20, G4P.SCROLLBARS_NONE);
+  fldEnsayosLuz = new GTextField(this, 120, 170, 40, 20, G4P.SCROLLBARS_NONE);
   fldEnsayosLuz.setOpaque(true);
-  lblEnsayosTono = new GLabel(this, 330, 210, 110, 20);
+  lblEnsayosTono = new GLabel(this, 220, 170, 110, 20);
   lblEnsayosTono.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lblEnsayosTono.setText("# Ensayos tono:");
   lblEnsayosTono.setOpaque(false);
-  fldEnsayosTono = new GTextField(this, 440, 210, 40, 20, G4P.SCROLLBARS_NONE);
+  fldEnsayosTono = new GTextField(this, 330, 170, 40, 20, G4P.SCROLLBARS_NONE);
   fldEnsayosTono.setOpaque(true);
-  lblTiempoEspera = new GLabel(this, 50, 240, 150, 20);
+  lblTiempoEspera = new GLabel(this, 20, 200, 150, 20);
   lblTiempoEspera.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lblTiempoEspera.setText("Tiempo de espera (ms)");
   lblTiempoEspera.setOpaque(false);
-  fldTiempoEspera = new GTextField(this, 200, 240, 40, 20, G4P.SCROLLBARS_NONE);
+  fldTiempoEspera = new GTextField(this, 170, 200, 40, 20, G4P.SCROLLBARS_NONE);
   fldTiempoEspera.setOpaque(true);
-  lblDuracionEstimulo = new GLabel(this, 280, 250, 180, 20);
+  lblDuracionEstimulo = new GLabel(this, 270, 200, 180, 20);
   lblDuracionEstimulo.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lblDuracionEstimulo.setText("Duración del estímulo (ms):");
   lblDuracionEstimulo.setOpaque(false);
-  fldDuracionEstimulo = new GTextField(this, 460, 250, 40, 20, G4P.SCROLLBARS_NONE);
+  fldDuracionEstimulo = new GTextField(this, 450, 200, 40, 20, G4P.SCROLLBARS_NONE);
   fldDuracionEstimulo.setOpaque(true);
-  lblRetardoPuerta = new GLabel(this, 30, 260, 170, 20);
+  lblRetardoPuerta = new GLabel(this, 20, 230, 170, 20);
   lblRetardoPuerta.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lblRetardoPuerta.setText("Retardo puerta (ms):");
   lblRetardoPuerta.setOpaque(false);
-  fldRetardoPuerta = new GTextField(this, 200, 260, 40, 20, G4P.SCROLLBARS_NONE);
+  fldRetardoPuerta = new GTextField(this, 190, 230, 40, 20, G4P.SCROLLBARS_NONE);
   fldRetardoPuerta.setOpaque(true);
-  lblVolumenIzquierdo = new GLabel(this, 10, 290, 190, 20);
+  lblVolumenIzquierdo = new GLabel(this, 20, 260, 190, 20);
   lblVolumenIzquierdo.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lblVolumenIzquierdo.setText("Volumen de recompenza izq.");
   lblVolumenIzquierdo.setOpaque(false);
-  fldVolumenIzquierdo = new GTextField(this, 200, 290, 40, 20, G4P.SCROLLBARS_NONE);
+  fldVolumenIzquierdo = new GTextField(this, 210, 260, 40, 20, G4P.SCROLLBARS_NONE);
   fldVolumenIzquierdo.setOpaque(true);
-  lblVolumenDerecha = new GLabel(this, 270, 290, 190, 20);
+  lblVolumenDerecha = new GLabel(this, 270, 260, 190, 20);
   lblVolumenDerecha.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lblVolumenDerecha.setText("Volumen de recompenza der.");
   lblVolumenDerecha.setOpaque(false);
-  fldVolumenDerecho = new GTextField(this, 460, 290, 40, 20, G4P.SCROLLBARS_NONE);
+  fldVolumenDerecho = new GTextField(this, 460, 260, 40, 20, G4P.SCROLLBARS_NONE);
   fldVolumenDerecho.setOpaque(true);
-  btnIniciar = new GButton(this, 10, 360, 60, 30);
+  btnIniciar = new GButton(this, 110, 310, 80, 30);
   btnIniciar.setText("Iniciar");
   btnIniciar.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   btnIniciar.addEventHandler(this, "btnIniciar_click");
-  btnDetener = new GButton(this, 10, 360, 60, 30);
+  btnDetener = new GButton(this, 380, 310, 80, 30);
   btnDetener.setText("Detener");
   btnDetener.setLocalColorScheme(GCScheme.RED_SCHEME);
   btnDetener.addEventHandler(this, "btnDetener_click");
-  lblEstadoConexion = new GLabel(this, 420, 20, 120, 20);
-  lblEstadoConexion.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  lblEstadoConexion.setText("desconectado");
-  lblEstadoConexion.setOpaque(false);
-  btnAbrir = new GButton(this, 490, 360, 80, 30);
+  btnBombaI = new GButton(this, 600, 50, 80, 30);
+  btnBombaI.setText("Bomba Izq.");
+  btnBombaI.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  btnBombaI.addEventHandler(this, "btnBombaI_click");
+  btnBombaD = new GButton(this, 700, 50, 80, 30);
+  btnBombaD.setText("Bomba der.");
+  btnBombaD.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  btnBombaD.addEventHandler(this, "btnBombaD_click");
+  btnAbrir = new GButton(this, 600, 100, 80, 30);
   btnAbrir.setText("Abrir");
-  btnAbrir.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
+  btnAbrir.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   btnAbrir.addEventHandler(this, "btnAbrir_click");
-  btnCerrar = new GButton(this, 590, 360, 80, 30);
+  btnCerrar = new GButton(this, 700, 100, 80, 30);
   btnCerrar.setText("Cerrar");
-  btnCerrar.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
+  btnCerrar.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   btnCerrar.addEventHandler(this, "btnCerrar_click");
-  btnLlenarI = new GButton(this, 110, 360, 80, 30);
-  btnLlenarI.setText("Llenar Izq.");
-  btnLlenarI.setLocalColorScheme(GCScheme.GOLD_SCHEME);
-  btnLlenarI.addEventHandler(this, "btnLlenarI_click");
-  btnLlenarD = new GButton(this, 190, 360, 80, 30);
-  btnLlenarD.setText("Llenar Der.");
-  btnLlenarD.setLocalColorScheme(GCScheme.GOLD_SCHEME);
-  btnLlenarD.addEventHandler(this, "btnLlenarD_click");
-  lblPuerta = new GLabel(this, 540, 330, 80, 20);
-  lblPuerta.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  lblPuerta.setText("Puerta:");
-  lblPuerta.setOpaque(false);
-  lblBombas = new GLabel(this, 150, 330, 80, 20);
-  lblBombas.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  lblBombas.setText("Bombas");
-  lblBombas.setOpaque(false);
-  btnAbrircarpeta = new GButton(this, 330, 360, 110, 30);
-  btnAbrircarpeta.setText("Abrir carpeta");
-  btnAbrircarpeta.addEventHandler(this, "btnAbrircarpeta_click");
-  lblEstado = new GLabel(this, 310, 320, 150, 20);
+  lblEstado = new GLabel(this, 610, 10, 160, 30);
   lblEstado.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lblEstado.setOpaque(false);
 }
@@ -191,6 +184,7 @@ public void createGUI(){
 GLabel lbl_id; 
 GLabel lbl_fecha; 
 GLabel lblFechaActual; 
+GCheckbox chkAleatorio; 
 GLabel lblNotas; 
 GTextArea txaNotas; 
 GLabel lblComenzarCon; 
@@ -216,12 +210,8 @@ GLabel lblVolumenDerecha;
 GTextField fldVolumenDerecho; 
 GButton btnIniciar; 
 GButton btnDetener; 
-GLabel lblEstadoConexion; 
+GButton btnBombaI; 
+GButton btnBombaD; 
 GButton btnAbrir; 
 GButton btnCerrar; 
-GButton btnLlenarI; 
-GButton btnLlenarD; 
-GLabel lblPuerta; 
-GLabel lblBombas; 
-GButton btnAbrircarpeta; 
 GLabel lblEstado; 

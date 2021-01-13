@@ -1,5 +1,3 @@
-//Funciones básicas
-
 void fecha(){
   while(true){
   fecha = day()+"-"+month()+"-"+year();
@@ -17,42 +15,55 @@ void actualizarFechaHora(){
   lblFechaActual.setText(fecha + "_" + hora);
   }
 }
+void alimentar(int puerto, int volumen){
+  int veces = volumen/3;
+  for(int i =0;i<veces;i++){
+    duino.digitalWrite(puerto,Arduino.HIGH);
+    delay(50);
+    duino.digitalWrite(puerto,Arduino.LOW);
+  }
+}
+
+void llenar(int puerto){
+  duino.digitalWrite(puerto,Arduino.HIGH);
+  delay(2000);
+  duino.digitalWrite(puerto,Arduino.LOW);
+}
 
 void conectar(){
-  if(ardu != null){
-    ardu.dispose();
-    println("INFO:arduino conectado");
-  }
-  println("INFO:conectando al puerto:"+Serial.list()[lstPuertos.getSelectedIndex()]);
-  ardu = new Arduino(this, Arduino.list()[lstPuertos.getSelectedIndex()], 57600);
-  ardu.pinMode(bombaI, Arduino.OUTPUT);
-  ardu.pinMode(bombaD, Arduino.OUTPUT);
-  ardu.pinMode(ledBuzzer, Arduino.OUTPUT);
-  ardu.pinMode(ledLuz, Arduino.OUTPUT);
-  ardu.pinMode(puerta, Arduino.SERVO);
-  ardu.pinMode(sensorI, Arduino.INPUT);
-  ardu.pinMode(sensorD, Arduino.INPUT);
-  ardu.pinMode(sensorE, Arduino.INPUT);
-  ardu.servoWrite(puerta, angCierre);
-  
-  //This make arduino signal an ok connection
-  delay(1000);
-  ardu.digitalWrite(10,Arduino.HIGH);
-  delay(100);
-  ardu.digitalWrite(10,Arduino.LOW);
-  delay(100);
-  ardu.digitalWrite(10,Arduino.HIGH);
-  delay(100);
-  ardu.digitalWrite(10,Arduino.LOW);
-  println("INFO:Exito");
-  lblEstadoConexion.setText("conectado!");
-}
+  println(lstPuertos.getSelectedIndex());
+  duino = new Arduino(this,Arduino.list()[lstPuertos.getSelectedIndex()],57600);
+  btnAbrirPuerto.setVisible(false);
+  btnDesconectar.setVisible(true);
+  duino.pinMode(puerta,Arduino.SERVO);
+  duino.pinMode(bombaI,Arduino.OUTPUT);
+  duino.pinMode(bombaD,Arduino.OUTPUT);
+  duino.pinMode(buzzer,Arduino.OUTPUT);
+  duino.pinMode(luzEstimulo,Arduino.OUTPUT);
+  duino.pinMode(ledEstimulo,Arduino.OUTPUT);
+  duino.pinMode(ledBuzzer,Arduino.OUTPUT);
+  duino.pinMode(ledOk,Arduino.OUTPUT);
+  duino.digitalWrite(ledOk,Arduino.HIGH);
+  delay(500);
+  duino.digitalWrite(ledOk,Arduino.LOW);
+  duino.servoWrite(puerta,30);
+  delay(500);
+  duino.servoWrite(puerta,64);
 
+}
 void desconectar(){
-  ardu.dispose();
-  println("arduino disconnected!");
+  println("Desconectandor puerto");
+  duino.dispose();
+  btnDesconectar.setVisible(false);
+  btnAbrirPuerto.setVisible(true);
 }
 
+void abrirPuerta(){
+  duino.servoWrite(puerta,aperturaPuerta);
+}
+void cerrarPuerta(){
+  duino.servoWrite(puerta,cierrePuerta);
+}
 void agregarTextoArchivo(String filename, String text) {
   File f = new File(dataPath(filename));
   if (!f.exists()) {
@@ -71,93 +82,10 @@ void agregarTextoArchivo(String filename, String text) {
 void creaArchivo(File f) {
   File parentDir = f.getParentFile();
   try {
-    parentDir.mkdirs();
+    parentDir.mkdirs(); 
     f.createNewFile();
   }
   catch(Exception e) {
     e.printStackTrace();
   }
-}
-
-//Funciones bombas
-void llenar(int puerto)
-{
-  println("RUN:Llenando!");
-  ardu.digitalWrite(puerto, Arduino.HIGH);
-  delay(3000);
-  ardu.digitalWrite(puerto, Arduino.LOW);
-  println("RUN:Hecho!");
-}
-
-void alimentar(int puerto,int volumen)
-{
-  println("RUN: feed");
-  int cycles = volumen*4;
-  while(cycles>=0){
-    ardu.digitalWrite(puerto, Arduino.HIGH);
-    delay(pulsoBomba);
-    ardu.digitalWrite(puerto, Arduino.LOW);
-    delay(pulsoApBomba);
-    cycles--;
-  }
-}
-
-void llenarI(){
-  llenar(bombaI);
-}
-
-void llenarD(){
-  llenar(bombaD);
-}
-
-//funciones archivo
-void abrirCarpeta() {
-  println("Opening folder:"+dataPath(""));
-  if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-    launch("explorer.exe"+" "+dataPath(""));
-  } else {
-    launch(dataPath(""));
-  }
-}
-
-void escribirParametros(String flname)
-{
-  println("FILE:"+flname);
-  String datetime = new String(day()+"-"+month()+"-"+year()+" "+hour()+":"+minute()+":"+second());
-  println(datetime);
-  //String params = fld;
-  //println(params);
-  agregarTextoArchivo(flname, "started: "+datetime);
-  //agregarTextoArchivo(flname, params);
-}
-
-void escribirCabecera(String flname)
-{
-  agregarTextoArchivo(flname, "");
-}
-
-void escribirSeparador(String flname)
-{
-  agregarTextoArchivo(flname, "");
-}
-
-void abrirPuerta(){
-  ardu.pinMode(puerta,Arduino.SERVO);
-  for(int i = angAbierto;i<angCierre;i++){
-    ardu.servoWrite(puerta,i);
-    delay(esperaPuerta);
-  }
-}
-
-void cerrarPuerta(){
-  
-  for(int i = angCierre;i>angAbierto;i--)
-  {
-    ardu.servoWrite(puerta,i);
-    delay(esperaPuerta);
-  }
-}
-
-void infoVentana(){
-  surface.setTitle("");
 }

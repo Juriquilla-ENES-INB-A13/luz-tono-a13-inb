@@ -1,54 +1,43 @@
+
+import g4p_controls.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.lang.*;
-import processing.serial.*;
 import cc.arduino.*;
 import org.firmata.*;
-import g4p_controls.*;
-
-
-
-
+import processing.serial.*;
 String fecha;
 String hora;
 String id;
-Arduino ardu;
-
+Arduino duino;
 
 //conexiones
-int buzzer=2;
-int led=4;
-int ledBuzzer=7;
-int ledLuz=8;
-int bombaI=5;
-int bombaD=6;
-int puerta=7;
-int sensorI=0;
-int sensorD=1;
-int sensorE=5;
-int esperaPuerta=10;
+int bombaD=5;
+int bombaI=6;
+int puerta=8;
+int buzzer=4;
+int luzEstimulo=7;
+int ledEstimulo=3;
+int ledBuzzer=2;
+int ledOk=10;
+int cierrePuerta=64;
+int aperturaPuerta=10;
+int sensorI;
+int sensorD;
+int sensorE;
+int iteracion;
+int minimoSensor=900;
 
-//variables
-int angCierre = 45;
-int angAbierto= 100;
-int pulsoBomba = 7;
-int pulsoApBomba=25;
-int numeroIteraciones;
-int iteracion=1;
-int experimentosLuz;
-int experimentosBuzzer;
 boolean experimentoCorriendo=false;
-boolean sensorTocadoI=false;
-boolean sensorTocadoD=false;
-boolean sensorTocadoIn=false;
 boolean esperandoPrueba=false;
 boolean cancelado=false;
-boolean listaExperimentos[];
-String arrIniciar[]= {"Aleatorio","Luz","Buzzer"};
+
+String[] pruebas = {"luz","tono"};
+String prueba;
 String nomArchivo;
 
 public void setup(){
-  size(690, 400, JAVA2D);
+  size(800, 400, JAVA2D);
   createGUI();
   customGUI();
   thread("fecha");
@@ -62,10 +51,20 @@ public void draw(){
 
 public void customGUI(){
   btnDesconectar.setVisible(false);
-  fldVolumenIzquierdo.setNumericType(G4P.DECIMAL);
-  fldVolumenDerecho.setNumericType(G4P.DECIMAL);
   fldEnsayosLuz.setNumericType(G4P.INTEGER);
-  fldEnsayosLuz.setNumericType(G4P.INTEGER);
+  fldEnsayosTono.setNumericType(G4P.INTEGER);
+  fldTiempoEspera.setNumericType(G4P.INTEGER);
+  fldVolumenDerecho.setNumericType(G4P.INTEGER);
+  fldVolumenIzquierdo.setNumericType(G4P.INTEGER);
   fldDuracionEstimulo.setNumericType(G4P.INTEGER);
-  btnDetener.setVisible(false);
+  fldRetardoPuerta.setNumericType(G4P.INTEGER);
+  fldEnsayosLuz.setText("1");
+  fldEnsayosTono.setText("1");
+  fldTiempoEspera.setText("1000");
+  fldDuracionEstimulo.setText("500");
+  fldRetardoPuerta.setText("1000");
+  fldVolumenDerecho.setText("3");
+  fldVolumenIzquierdo.setText("3");
+  Integer ID = new Integer(int(random(1000000)));
+  fldID.setText(ID.toString());
 }
