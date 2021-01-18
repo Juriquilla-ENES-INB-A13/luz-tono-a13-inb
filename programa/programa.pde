@@ -22,9 +22,9 @@ int ledBuzzer=2;
 int ledOk=10;
 int cierrePuerta=64;
 int aperturaPuerta=10;
-int sensorI;
-int sensorD;
-int sensorE;
+int sensorI=1;
+int sensorD=2;
+int sensorE=0;
 int iteracion;
 int minimoSensor=900;
 
@@ -58,8 +58,6 @@ public void customGUI(){
   fldVolumenIzquierdo.setNumericType(G4P.INTEGER);
   fldDuracionEstimulo.setNumericType(G4P.INTEGER);
   fldRetardoPuerta.setNumericType(G4P.INTEGER);
-  fldEnsayosLuz.setText("1");
-  fldEnsayosTono.setText("1");
   fldTiempoEspera.setText("1000");
   fldDuracionEstimulo.setText("500");
   fldRetardoPuerta.setText("1000");
