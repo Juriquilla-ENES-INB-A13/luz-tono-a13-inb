@@ -8,7 +8,9 @@ String pruebaLuz(){
 
   String estado=null;
   String resultado;
-  
+  int numTemp = fldEnsayosLuz.getValueI();
+  numTemp--;
+  fldEnsayosLuz.setText(Integer.toString(numTemp));
   lblEstado.setText("Estímulo luz");
   duino.digitalWrite(luzEstimulo,Arduino.HIGH);
   duino.digitalWrite(ledEstimulo,Arduino.HIGH);
@@ -58,6 +60,9 @@ String pruebaBuzzer(){
   esperandoPrueba=true;
   String estado=null;
   String resultado;
+  int numTemp = fldEnsayosTono.getValueI();
+  numTemp--;
+  fldEnsayosTono.setText(Integer.toString(numTemp));
   lblEstado.setText("Estímulo Buzzer");
   duino.digitalWrite(buzzer,Arduino.HIGH);
   duino.digitalWrite(ledBuzzer,Arduino.HIGH);
@@ -110,9 +115,15 @@ public char[] crearLista(){
     indice=1;
     for(;indice<listaTemporal.length;indice++){
       if(int(random(0,2))==0){
-        listaTemporal[indice]='l';
+        if(numLuz>0){
+          listaTemporal[indice]='l';
+          numLuz-=1;
+        }
       }else{
-        listaTemporal[indice]='t';
+        if(numTono>0){
+          listaTemporal[indice]='t';
+          numLuz-=1;
+        }
       }
     }
   }else if(chkAleatorio.isSelected()&&(lstEstimulo.getSelectedIndex()==1)){
