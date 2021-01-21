@@ -1,2 +1,6 @@
 programa/application.windows32/
 programa/application.windows64/
+<<<<<<< HEAD
+=======
+programa/data/*.txt
+>>>>>>> 91a20b756920d0e10d18da8692f502c7f1a39bb4
