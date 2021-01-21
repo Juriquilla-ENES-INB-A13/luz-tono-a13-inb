@@ -16,10 +16,15 @@ void actualizarFechaHora(){
   }
 }
 void alimentar(int puerto, int volumen){
+  println("Alimentar:"+puerto);
   int veces = volumen/3;
   for(int i =0;i<veces;i++){
     duino.digitalWrite(puerto,Arduino.HIGH);
-    delay(50);
+    delay(5);
+    duino.digitalWrite(puerto,Arduino.LOW);
+    delay(500);
+    duino.digitalWrite(puerto,Arduino.HIGH);
+    delay(5);
     duino.digitalWrite(puerto,Arduino.LOW);
   }
 }
@@ -60,9 +65,11 @@ void desconectar(){
 
 void abrirPuerta(){
   duino.servoWrite(puerta,aperturaPuerta);
+  println("Abrir puerta");
 }
 void cerrarPuerta(){
   duino.servoWrite(puerta,cierrePuerta);
+  println("Cerrar Puerta");
 }
 void agregarTextoArchivo(String filename, String text) {
   File f = new File(dataPath(filename));
@@ -87,5 +94,14 @@ void creaArchivo(File f) {
   }
   catch(Exception e) {
     e.printStackTrace();
+  }
+}
+
+void abrirCarpeta(){
+  println("Ariendo carpeta:"+dataPath(""));
+  if(System.getProperty("os.name").toLowerCase().contains("windows")){
+    launch("explorer.exe"+" "+dataPath(""));
+  }else{
+    launch(dataPath(""));
   }
 }

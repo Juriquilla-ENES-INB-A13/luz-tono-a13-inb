@@ -2,15 +2,13 @@ String pruebaLuz(){
   if(esperandoPrueba){
     println("Ya hay otra prueba en ejecución");
     return "";
-    
   }
   println("Estimulo luz");
   esperandoPrueba=true;
-  int tiempoInicio=millis();
-  int tiempoLimite = tiempoInicio+1000+fldTiempoEspera.getValueI();
-  int tiempoEmpleado;
+
   String estado=null;
   String resultado;
+  
   lblEstado.setText("Estímulo luz");
   duino.digitalWrite(luzEstimulo,Arduino.HIGH);
   duino.digitalWrite(ledEstimulo,Arduino.HIGH);
@@ -19,46 +17,47 @@ String pruebaLuz(){
   duino.digitalWrite(ledEstimulo,Arduino.LOW);
   delay(fldRetardoPuerta.getValueI());
   abrirPuerta();
+  int tiempoInicio=millis();
+  int tiempoEmpleado=0;
+  delay(1000);
   esperandoPrueba=true;
+  boolean tocado=false;
   while(esperandoPrueba && (!cancelado)){
     lblEstado.setText("Esperando prueba");
-    if(millis()>=tiempoLimite){
-      estado = "expirado";
-      esperandoPrueba=false;
-    }
-    if(duino.analogRead(sensorI)>minimoSensor){
+    if((duino.analogRead(sensorI)>minimoSensor)&&(!tocado)){
+      println("Luz, exito");
       estado = "exito";
-      esperandoPrueba=false;
+      tocado = true;
       alimentar(bombaI,fldVolumenIzquierdo.getValueI());
+      tiempoEmpleado=millis()-tiempoInicio;
     }
-    if(duino.analogRead(sensorD)>minimoSensor){
+    if((duino.analogRead(sensorD)>minimoSensor)&&(!tocado)){
+      println("Luz, fallo");
       estado = "fallo";
+      tocado = true;
+      tiempoEmpleado=millis()-tiempoInicio;
+    }
+    if((duino.analogRead(sensorE)>minimoSensor)&&(tocado)){
       esperandoPrueba=false;
     }
   }
   println(estado);
-  tiempoEmpleado=millis()-tiempoInicio;
   resultado = new String(",luz,"+tiempoEmpleado+","+estado);
   cerrarPuerta();
+  delay(1000);
   esperandoPrueba=false;
   return resultado;
-}
-
+} //<>//
 
 String pruebaBuzzer(){
   if(esperandoPrueba){
     println("Ya hay otra prueba en ejecución");
     return "";
-    
   }
   println("Estimulo buzzer");
   esperandoPrueba=true;
-  int tiempoInicio=millis();
-  int tiempoLimite = tiempoInicio+1000+fldTiempoEspera.getValueI();
-  int tiempoEmpleado;
   String estado=null;
   String resultado;
-  boolean sensorTocado=false;
   lblEstado.setText("Estímulo Buzzer");
   duino.digitalWrite(buzzer,Arduino.HIGH);
   duino.digitalWrite(ledBuzzer,Arduino.HIGH);
@@ -67,27 +66,35 @@ String pruebaBuzzer(){
   duino.digitalWrite(ledBuzzer,Arduino.LOW);
   delay(fldRetardoPuerta.getValueI());
   abrirPuerta();
+  int tiempoInicio=millis();
+  int tiempoEmpleado=0;
+  delay(1000);
   esperandoPrueba=true;
+  boolean tocado=false;
   while(esperandoPrueba && (!cancelado)){
     lblEstado.setText("Esperando prueba");
-    if(millis()>=tiempoLimite){
-      estado = "expirado";
-      esperandoPrueba=false;
-    }
-    if(duino.analogRead(sensorD)>minimoSensor){
+    if((duino.analogRead(sensorD)>minimoSensor)&&(!tocado)){
+      println("Tono, exito");
       estado = "exito";
-      esperandoPrueba=false;
-      alimentar(bombaD,fldVolumenIzquierdo.getValueI());
+      tocado = true;
+      tiempoEmpleado=millis()-tiempoInicio;
+      alimentar(bombaD,fldVolumenDerecho.getValueI());
     }
     if(duino.analogRead(sensorI)>minimoSensor){
+      println("Tono,fallo");
       estado = "fallo";
+      tocado = true;
+      tiempoEmpleado=millis()-tiempoInicio;
+    }
+    if((duino.analogRead(sensorE)>minimoSensor)&&(tocado)){
       esperandoPrueba=false;
     }
   }
   println(estado);
-  tiempoEmpleado=millis()-tiempoInicio;
+  
   resultado = new String(",buzzer,"+tiempoEmpleado+","+estado);
   cerrarPuerta();
+  delay(1000);
   esperandoPrueba=false;
   return resultado;
 }
@@ -147,20 +154,30 @@ void experimento(){
   }
   experimentoCorriendo=true;
   char listaExperimentos[] = crearLista();
-  String resultadoExperimento;
+  println("num_exp:"+listaExperimentos.length);
   cancelado=false;
-
   nomArchivo = fldID.getText() + day()+"-"+month()+"-"+year()+"_"+hour()+"-"+minute()+".txt";
   agregarTextoArchivo(nomArchivo,"notas:"+txaNotas.getText());
-  while(experimentoCorriendo){
-    for(int j=0;j<listaExperimentos.length;j++){
-      if(listaExperimentos[j]=='l'){
-        agregarTextoArchivo(nomArchivo,j+","+pruebaLuz());
-      }else{
-        agregarTextoArchivo(nomArchivo,j+","+pruebaBuzzer());
+  //while(experimentoCorriendo){ //<>//
+    for(int j=0;j<listaExperimentos.length;j++){ //<>//
+      if(cancelado){
+        return;
       }
+      println("iter:"+j);
+      delay(fldTiempoEspera.getValueI());
+      String resultado;
+      if(listaExperimentos[j]=='l'){
+        
+        //agregarTextoArchivo(nomArchivo,j+","+pruebaLuz());
+        resultado=pruebaLuz();
+      }else{
+        resultado=pruebaBuzzer();
+        //agregarTextoArchivo(nomArchivo,j+","+pruebaBuzzer());
+      }
+      agregarTextoArchivo(nomArchivo,resultado);
+      
     }
-  }
+  //}
   experimentoCorriendo=false;
   println("terminado");
 }
