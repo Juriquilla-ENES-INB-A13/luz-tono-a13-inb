@@ -26,11 +26,69 @@ public void btnDesconectar_click(GButton source, GEvent event) { //_CODE_:btnDes
 
 public void btnIniciar_click(GButton source, GEvent event) { //_CODE_:btnIniciar:459039:
   println("btnIniciar - GButton >> GEvent." + event + " @ " + millis());
+  thread("experimento");
 } //_CODE_:btnIniciar:459039:
 
 public void btnDetener_click(GButton source, GEvent event) { //_CODE_:btnDetener:787334:
   println("btnDetener - GButton >> GEvent." + event + " @ " + millis());
+  esperandoPrueba=false;
+  cancelado=true;
+  experimentoCorriendo=false;
 } //_CODE_:btnDetener:787334:
+
+public void btnBombaI_click(GButton source, GEvent event) { //_CODE_:btnBombaI:932245:
+  println("btnBombaI - GButton >> GEvent." + event + " @ " + millis());
+  llenar(bombaI);
+} //_CODE_:btnBombaI:932245:
+
+public void btnBombaD_click(GButton source, GEvent event) { //_CODE_:btnBombaD:772033:
+  println("btnBombaD - GButton >> GEvent." + event + " @ " + millis());
+  llenar(bombaD);
+} //_CODE_:btnBombaD:772033:
+
+public void btnAbrir_click(GButton source, GEvent event) { //_CODE_:btnAbrir:762948:
+  println("btnAbrir - GButton >> GEvent." + event + " @ " + millis());
+  abrirPuerta();
+} //_CODE_:btnAbrir:762948:
+
+public void btnCerrar_click(GButton source, GEvent event) { //_CODE_:btnCerrar:516552:
+  println("btnCerrar - GButton >> GEvent." + event + " @ " + millis());
+  cerrarPuerta();
+} //_CODE_:btnCerrar:516552:
+
+public void btnBuzzer_click(GButton source, GEvent event) { //_CODE_:btnBuzzer:300812:
+  println("btnBuzzer - GButton >> GEvent." + event + " @ " + millis());
+  duino.digitalWrite(buzzer,Arduino.HIGH);
+  duino.digitalWrite(ledBuzzer,Arduino.HIGH);
+  delay(fldDuracionEstimulo.getValueI());
+  duino.digitalWrite(buzzer,Arduino.LOW);
+  duino.digitalWrite(ledBuzzer,Arduino.LOW);
+} //_CODE_:btnBuzzer:300812:
+
+public void btnLuz_click(GButton source, GEvent event) { //_CODE_:btnLuz:353278:
+  println("btnLuz - GButton >> GEvent." + event + " @ " + millis());
+  duino.digitalWrite(luzEstimulo,Arduino.HIGH);
+  duino.digitalWrite(ledEstimulo,Arduino.HIGH);
+  delay(fldDuracionEstimulo.getValueI());
+  duino.digitalWrite(luzEstimulo,Arduino.LOW);
+  duino.digitalWrite(ledEstimulo,Arduino.LOW);
+} //_CODE_:btnLuz:353278:
+
+public void baI_click(GButton source, GEvent event) { //_CODE_:btnAlimIzq:425218:
+  println("btnAlimIzq - GButton >> GEvent." + event + " @ " + millis());
+  alimentar(bombaI,fldVolumenIzquierdo.getValueI());
+  
+} //_CODE_:btnAlimIzq:425218:
+
+public void alimDer_click(GButton source, GEvent event) { //_CODE_:alimDer:705742:
+  println("alimDer - GButton >> GEvent." + event + " @ " + millis());
+  alimentar(bombaD,fldVolumenDerecho.getValueI());
+} //_CODE_:alimDer:705742:
+
+public void abrirCarpeta_click(GButton source, GEvent event) { //_CODE_:btnAbrirCarpeta:703537:
+  println("btnAbrirCarpeta - GButton >> GEvent." + event + " @ " + millis());
+  abrirCarpeta();
+} //_CODE_:btnAbrirCarpeta:703537:
 
 
 
@@ -68,7 +126,7 @@ public void createGUI(){
   lblComenzarCon.setText("Comenzar con:");
   lblComenzarCon.setOpaque(false);
   lstEstimulo = new GDropList(this, 120, 140, 90, 60, 2, 10);
-  lstEstimulo.setItems(loadStrings("list_358796"), 0);
+  lstEstimulo.setItems(pruebas, 0);
   lblPuerto = new GLabel(this, 20, 20, 80, 20);
   lblPuerto.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lblPuerto.setText("Puerto:");
@@ -134,6 +192,40 @@ public void createGUI(){
   btnDetener.setText("Detener");
   btnDetener.setLocalColorScheme(GCScheme.RED_SCHEME);
   btnDetener.addEventHandler(this, "btnDetener_click");
+  btnBombaI = new GButton(this, 600, 50, 80, 30);
+  btnBombaI.setText("Bomba Izq.");
+  btnBombaI.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  btnBombaI.addEventHandler(this, "btnBombaI_click");
+  btnBombaD = new GButton(this, 700, 50, 80, 30);
+  btnBombaD.setText("Bomba der.");
+  btnBombaD.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  btnBombaD.addEventHandler(this, "btnBombaD_click");
+  btnAbrir = new GButton(this, 600, 100, 80, 30);
+  btnAbrir.setText("Abrir");
+  btnAbrir.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  btnAbrir.addEventHandler(this, "btnAbrir_click");
+  btnCerrar = new GButton(this, 700, 100, 80, 30);
+  btnCerrar.setText("Cerrar");
+  btnCerrar.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  btnCerrar.addEventHandler(this, "btnCerrar_click");
+  lblEstado = new GLabel(this, 610, 10, 160, 30);
+  lblEstado.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lblEstado.setOpaque(false);
+  btnBuzzer = new GButton(this, 600, 150, 80, 30);
+  btnBuzzer.setText("Buzzer");
+  btnBuzzer.addEventHandler(this, "btnBuzzer_click");
+  btnLuz = new GButton(this, 700, 150, 80, 30);
+  btnLuz.setText("Luz");
+  btnLuz.addEventHandler(this, "btnLuz_click");
+  btnAlimIzq = new GButton(this, 600, 200, 80, 30);
+  btnAlimIzq.setText("Alim. Izq.");
+  btnAlimIzq.addEventHandler(this, "baI_click");
+  alimDer = new GButton(this, 700, 200, 80, 30);
+  alimDer.setText("Alim. Der.");
+  alimDer.addEventHandler(this, "alimDer_click");
+  btnAbrirCarpeta = new GButton(this, 580, 310, 150, 30);
+  btnAbrirCarpeta.setText("Abrir carpeta");
+  btnAbrirCarpeta.addEventHandler(this, "abrirCarpeta_click");
 }
 
 // Variable declarations 
@@ -167,3 +259,13 @@ GLabel lblVolumenDerecha;
 GTextField fldVolumenDerecho; 
 GButton btnIniciar; 
 GButton btnDetener; 
+GButton btnBombaI; 
+GButton btnBombaD; 
+GButton btnAbrir; 
+GButton btnCerrar; 
+GLabel lblEstado; 
+GButton btnBuzzer; 
+GButton btnLuz; 
+GButton btnAlimIzq; 
+GButton alimDer; 
+GButton btnAbrirCarpeta; 
