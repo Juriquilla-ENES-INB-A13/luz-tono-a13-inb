@@ -63,6 +63,8 @@ public void customGUI(){
   fldRetardoPuerta.setText("1000");
   fldVolumenDerecho.setText("3");
   fldVolumenIzquierdo.setText("3");
+  fldEnsayosLuz.setText("3");
+  fldEnsayosTono.setText("3");
   Integer ID = new Integer(int(random(1000000)));
   fldID.setText(ID.toString());
 }

@@ -16,7 +16,8 @@
 
 public void btnAbrirPuerto_click(GButton source, GEvent event) { //_CODE_:btnAbrirPuerto:356009:
   println("btnAbrirPuerto - GButton >> GEvent." + event + " @ " + millis());
-  conectar();
+  crearLista();
+  //conectar();
 } //_CODE_:btnAbrirPuerto:356009:
 
 public void btnDesconectar_click(GButton source, GEvent event) { //_CODE_:btnDesconectar:881514:
