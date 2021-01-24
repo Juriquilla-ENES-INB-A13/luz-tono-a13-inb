@@ -108,21 +108,49 @@ public char[] crearLista(){
   {
     listaTemporal[0]='l';
     indice=1;
+    numLuz--;
     for(;indice<listaTemporal.length;indice++){
+      println(numLuz + ","+numTono);
       if(int(random(0,2))==0){
-        listaTemporal[indice]='l';
+        if(numLuz>0){
+          listaTemporal[indice]='l';
+          numLuz--;
+        }else{
+          listaTemporal[indice]='t';
+          numTono--;
+        }
       }else{
-        listaTemporal[indice]='t';
+        if(numTono>0){
+          listaTemporal[indice]='t';
+          numTono--;
+        }else{
+          listaTemporal[indice]='l';
+          numLuz--;
+        }
       }
     }
   }else if(chkAleatorio.isSelected()&&(lstEstimulo.getSelectedIndex()==1)){
     listaTemporal[0]='t';
     indice=1;
+    numTono--;
     for(;indice<listaTemporal.length;indice++){
+      println(numLuz + ","+numTono);
       if(int(random(0,2))==0){
-        listaTemporal[indice]='l';
+        if(numLuz>0){
+          listaTemporal[indice]='l';
+          numLuz--;
+        }else{
+          listaTemporal[indice]='t';
+          numTono--;
+        }
       }else{
-        listaTemporal[indice]='t';
+        if(numTono>0){
+          listaTemporal[indice]='t';
+          numTono--;
+        }else{
+          listaTemporal[indice]='l';
+          numLuz--;
+        }
       }
     }
   }else if(!chkAleatorio.isSelected()&&(lstEstimulo.getSelectedIndex()==0)){
