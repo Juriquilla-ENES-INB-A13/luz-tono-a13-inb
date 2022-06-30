@@ -28,6 +28,7 @@ String pruebaLuz(){
       println("Luz, exito");
       estado = "exito";
       tocado = true;
+      pokeL++;
       alimentar(bombaI,fldVolumenIzquierdo.getValueI());
       tiempoEmpleado=millis()-tiempoInicio;
     }
@@ -35,10 +36,12 @@ String pruebaLuz(){
       println("Luz, fallo");
       estado = "fallo";
       tocado = true;
+      errorL++;
       tiempoEmpleado=millis()-tiempoInicio;
     }
     if((duino.analogRead(sensorE)>minimoSensor)&&(tocado)){
       esperandoPrueba=false;
+      circuitoL++;
     }
   }
   println(estado);
@@ -77,6 +80,7 @@ String pruebaBuzzer(){
       println("Tono, exito");
       estado = "exito";
       tocado = true;
+      pokeT++;
       tiempoEmpleado=millis()-tiempoInicio;
       alimentar(bombaD,fldVolumenDerecho.getValueI());
     }
@@ -84,10 +88,12 @@ String pruebaBuzzer(){
       println("Tono,fallo");
       estado = "fallo";
       tocado = true;
+      errorT++;
       tiempoEmpleado=millis()-tiempoInicio;
     }
     if((duino.analogRead(sensorE)>minimoSensor)&&(tocado)){
       esperandoPrueba=false;
+      circuitoT++;
     }
   }
   println(estado);
@@ -180,8 +186,15 @@ void experimento(){
     println("Ya hay otro experimento corriendo");
     return;
   }
+  listaTemp=txtaListView.getText();
+  errorT = 0;
+  errorL =0;
+  pokeL=0;
+  pokeT=0;
+  circuitoL=0;
+  circuitoT=0;
   experimentoCorriendo=true;
-  char listaExperimentos[] = crearLista();
+  char listaExperimentos[] = listaTemp.toCharArray();
   println("num_exp:"+listaExperimentos.length);
   cancelado=false;
   nomArchivo = fldID.getText() + day()+"-"+month()+"-"+year()+"_"+hour()+"-"+minute()+".txt";
@@ -189,6 +202,8 @@ void experimento(){
   //while(experimentoCorriendo){ //<>//
     for(int j=0;j<listaExperimentos.length;j++){ //<>//
       if(cancelado){
+        agregarTextoArchivo(nomArchivo,"pokeL:"+pokeL+" pokeT:"+pokeT+" circuitoL:"+circuitoL+" circuitoT:"+circuitoT+" errorL:"+errorL+" errorT:"+errorT);
+    experimentoCorriendo=false;
         return;
       }
       println("iter:"+j);
@@ -206,6 +221,7 @@ void experimento(){
       
     }
   //}
+  agregarTextoArchivo(nomArchivo,"pokeL:"+pokeL+" pokeT:"+pokeT+" circuitoL:"+circuitoL+" circuitoT:"+circuitoT+" errorL:"+errorL+" errorT:"+errorT);
   experimentoCorriendo=false;
   println("terminado");
 }

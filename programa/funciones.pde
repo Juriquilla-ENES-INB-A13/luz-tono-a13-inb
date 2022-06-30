@@ -17,16 +17,11 @@ void actualizarFechaHora(){
 }
 void alimentar(int puerto, int volumen){
   println("Alimentar:"+puerto);
-  int veces = volumen/3;
-  for(int i =0;i<veces;i++){
     duino.digitalWrite(puerto,Arduino.HIGH);
-    delay(5);
+    delay(volumen);
     duino.digitalWrite(puerto,Arduino.LOW);
-    delay(500);
-    duino.digitalWrite(puerto,Arduino.HIGH);
-    delay(5);
-    duino.digitalWrite(puerto,Arduino.LOW);
-  }
+    
+   
 }
 
 void llenar(int puerto){

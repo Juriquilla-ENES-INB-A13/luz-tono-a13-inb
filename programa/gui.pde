@@ -91,6 +91,17 @@ public void abrirCarpeta_click(GButton source, GEvent event) { //_CODE_:btnAbrir
   abrirCarpeta();
 } //_CODE_:btnAbrirCarpeta:703537:
 
+public void lstTest_click(GButton source, GEvent event) { //_CODE_:listTest:963735:
+  listaPruebas = crearLista();
+  listaTemp=new String(listaPruebas);
+  txtaListView.setText(listaTemp);
+} //_CODE_:listTest:963735:
+
+public void txtlistView_change(GTextArea source, GEvent event) { //_CODE_:txtaListView:461620:
+  char[] temp = txtaListView.getText().toCharArray();
+  println(temp);
+} //_CODE_:txtaListView:461620:
+
 
 
 // Create all the GUI controls. 
@@ -185,11 +196,11 @@ public void createGUI(){
   lblVolumenDerecha.setOpaque(false);
   fldVolumenDerecho = new GTextField(this, 460, 260, 40, 20, G4P.SCROLLBARS_NONE);
   fldVolumenDerecho.setOpaque(true);
-  btnIniciar = new GButton(this, 110, 310, 80, 30);
+  btnIniciar = new GButton(this, 83, 430, 80, 30);
   btnIniciar.setText("Iniciar");
   btnIniciar.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   btnIniciar.addEventHandler(this, "btnIniciar_click");
-  btnDetener = new GButton(this, 380, 310, 80, 30);
+  btnDetener = new GButton(this, 377, 419, 80, 30);
   btnDetener.setText("Detener");
   btnDetener.setLocalColorScheme(GCScheme.RED_SCHEME);
   btnDetener.addEventHandler(this, "btnDetener_click");
@@ -224,9 +235,19 @@ public void createGUI(){
   alimDer = new GButton(this, 700, 200, 80, 30);
   alimDer.setText("Alim. Der.");
   alimDer.addEventHandler(this, "alimDer_click");
-  btnAbrirCarpeta = new GButton(this, 580, 310, 150, 30);
+  btnAbrirCarpeta = new GButton(this, 570, 426, 150, 30);
   btnAbrirCarpeta.setText("Abrir carpeta");
   btnAbrirCarpeta.addEventHandler(this, "abrirCarpeta_click");
+  listTest = new GButton(this, 633, 258, 80, 30);
+  listTest.setText("Make list");
+  listTest.addEventHandler(this, "lstTest_click");
+  txtaListView = new GTextArea(this, 134, 303, 470, 62, G4P.SCROLLBARS_NONE);
+  txtaListView.setOpaque(true);
+  txtaListView.addEventHandler(this, "txtlistView_change");
+  lblListView = new GLabel(this, 38, 304, 80, 20);
+  lblListView.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lblListView.setText("List:");
+  lblListView.setOpaque(false);
 }
 
 // Variable declarations 
@@ -270,3 +291,6 @@ GButton btnLuz;
 GButton btnAlimIzq; 
 GButton alimDer; 
 GButton btnAbrirCarpeta; 
+GButton listTest; 
+GTextArea txtaListView; 
+GLabel lblListView; 

@@ -1,4 +1,4 @@
-
+import java.util.*;
 import g4p_controls.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -20,7 +20,7 @@ int luzEstimulo=7;
 int ledEstimulo=3;
 int ledBuzzer=2;
 int ledOk=10;
-int cierrePuerta=64;
+int cierrePuerta=60;
 int aperturaPuerta=10;
 int sensorI=1;
 int sensorD=2;
@@ -28,16 +28,25 @@ int sensorE=0;
 int iteracion;
 int minimoSensor=900;
 
+  int pokeL = 0;
+  int pokeT = 0;
+  int circuitoL = 0;
+  int circuitoT = 0;
+  int errorL = 0;
+  int errorT = 0;
+
 boolean experimentoCorriendo=false;
 boolean esperandoPrueba=false;
 boolean cancelado=false;
 
 String[] pruebas = {"luz","tono"};
+char[] listaPruebas;
 String prueba;
+String listaTemp;
 String nomArchivo;
 
 public void setup(){
-  size(800, 400, JAVA2D);
+  size(800, 500, JAVA2D);
   createGUI();
   customGUI();
   thread("fecha");
